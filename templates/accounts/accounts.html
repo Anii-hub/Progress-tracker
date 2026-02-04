@@ -1,0 +1,11 @@
+<h2>My Friends</h2>
+
+{% if friends %}
+  <ul>
+    {% for friend in friends %}
+      <li>{{ friend.username }}</li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No friends yet.</p>
+{% endif %}

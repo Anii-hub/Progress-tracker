@@ -1,0 +1,18 @@
+<h2>LeetCode Stats</h2>
+
+{% if username %}
+  <p>Username: <strong>{{ username }}</strong></p>
+
+  {% if stats %}
+    <ul>
+      <li>Total Solved: {{ stats.total }}</li>
+      <li>Easy: {{ stats.easy }}</li>
+      <li>Medium: {{ stats.medium }}</li>
+      <li>Hard: {{ stats.hard }}</li>
+    </ul>
+  {% else %}
+    <p>Unable to fetch stats. Please check username.</p>
+  {% endif %}
+{% else %}
+  <p>No LeetCode username linked.</p>
+{% endif %}

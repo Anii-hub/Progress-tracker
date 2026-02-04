@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CodeTrack</title>
+</head>
+<body>
+    <h1>CodeTrack</h1>
+    <p>A platform to track coding & study progress.</p>
+{% if user.is_authenticated %}
+  <p>
+    <a href="{% url 'start_session' %}">▶ Start Session</a> |
+    <a href="{% url 'end_session' %}">⏹ End Session</a>
+  </p>
+
+  <a href="{% url 'add_progress' %}">Add Today's Progress</a> |
+  <a href="{% url 'progress_list' %}">View My Progress</a>
+  <h3>Pending Friend Requests</h3>
+
+{% for req in user.received_requests.all %}
+  {% if not req.is_accepted %}
+    <p>
+      {{ req.sender.username }}
+      <a href="{% url 'accept_friend_request' req.id %}">Accept</a>
+    </p>
+  {% endif %}
+{% empty %}
+  <p>No pending requests.</p>
+{% endfor %}
+<h3>Find Users</h3>
+
+<ul>
+  {% for u in users %}
+    <li>
+      {{ u.username }}
+
+      <a href="{% url 'send_friend_request' u.id %}">
+        <button>Send Friend Request</button>
+      </a>
+    </li>
+  {% empty %}
+    <li>No users available</li>
+  {% endfor %}
+</ul>
+
+  {% if user.profile.leetcode_username %}
+  <p>LeetCode: {{ user.profile.leetcode_username }}</p>
+{% else %}
+  <p>No LeetCode account linked</p>
+{% endif %}
+
+<a href="{% url 'edit_profile' %}">Edit Profile</a>
+
+{% else %}
+  <a href="{% url 'login' %}">Login</a>
+{% endif %}
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+<h2>Today's Progress</h2>
+<p>⏱ Today’s Study Time (auto): {{ progress.study_hours }} hours</p>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Save</button>
+</form>

@@ -1,0 +1,116 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+
+<div class="container">
+
+  <!-- KPI SECTION -->
+  <div class="card">
+    <h2>Weekly Overview</h2>
+    <p>📅 {{ week_start }} → {{ today }}</p>
+
+    <div class="kpi-grid">
+      <div class="kpi">
+        <span>Total Study Hours</span>
+        <strong>{{ total_hours }}</strong>
+      </div>
+      <div class="kpi">
+        <span>Total Problems Solved</span>
+        <strong>{{ total_problems }}</strong>
+      </div>
+      <div class="kpi">
+        <span>Avg Hours / Day</span>
+        <strong>{{ avg_hours }}</strong>
+      </div>
+      <div class="kpi">
+        <span>Avg Problems / Day</span>
+        <strong>{{ avg_problems }}</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="chart-row">
+    <div class="card chart-box">
+      <h4>Study Hours Trend</h4>
+      <canvas id="hoursChart"></canvas>
+    </div>
+
+    <div class="card chart-box">
+      <h4>Problems Solved Trend</h4>
+      <canvas id="problemsChart"></canvas>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="card table-card">
+    <h3>Daily Breakdown</h3>
+
+    <table>
+      <tr>
+        <th>Date</th>
+        <th>Study Hours</th>
+        <th>Problems Solved</th>
+      </tr>
+
+      {% for p in week_progress %}
+      <tr>
+        <td>{{ p.date }}</td>
+        <td>{{ p.study_hours }}</td>
+        <td>{{ p.problems_solved }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="3">No data available.</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{ dates|json_script:"dates-data" }}
+{{ study_hours|json_script:"hours-data" }}
+{{ problems|json_script:"problems-data" }}
+
+<script>
+  const labels = JSON.parse(document.getElementById('dates-data').textContent);
+  const hoursData = JSON.parse(document.getElementById('hours-data').textContent);
+  const problemsData = JSON.parse(document.getElementById('problems-data').textContent);
+
+  new Chart(document.getElementById('hoursChart'), {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Study Hours',
+        data: hoursData,
+        tension: 0.3
+      }]
+    },
+    options: {
+      responsive: false,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+
+  new Chart(document.getElementById('problemsChart'), {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Problems Solved',
+        data: problemsData
+      }]
+    },
+    options: {
+      responsive: false,
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+</script>
