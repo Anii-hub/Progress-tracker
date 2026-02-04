@@ -26,21 +26,30 @@
 {% empty %}
   <p>No pending requests.</p>
 {% endfor %}
-<h3>Find Users</h3>
+
+  <h3>Find Users</h3>
 
 <ul>
-  {% for u in users %}
-    <li>
-      {{ u.username }}
+{% for u in users %}
+  <li>
+    {{ u.username }}
 
-      <a href="{% url 'send_friend_request' u.id %}">
-        <button>Send Friend Request</button>
-      </a>
-    </li>
-  {% empty %}
-    <li>No users available</li>
-  {% endfor %}
+    {% if u.id in friends_ids %}
+        <strong>Friends</strong>
+
+    {% elif u.id in sent_requests %}
+        <em>Request Sent</em>
+
+    {% else %}
+        <a href="{% url 'send_friend_request' u.id %}">
+            <button>Add Friend</button>
+        </a>
+    {% endif %}
+
+  </li>
+{% endfor %}
 </ul>
+
 
   {% if user.profile.leetcode_username %}
   <p>LeetCode: {{ user.profile.leetcode_username }}</p>
@@ -53,6 +62,21 @@
 {% else %}
   <a href="{% url 'login' %}">Login</a>
 {% endif %}
+<h3>Pending Friend Requests</h3>
+
+{% for req in user.received_requests.all %}
+  {% if not req.is_accepted %}
+    <p>
+      {{ req.sender.username }}
+      <a href="{% url 'accept_friend_request' req.id %}">
+        <button>Accept</button>
+      </a>
+    </p>
+  {% endif %}
+{% empty %}
+  <p>No pending requests.</p>
+{% endfor %}
+
 
 </body>
 </html>
