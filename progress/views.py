@@ -1,12 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.contrib.auth.models import User
 from datetime import timedelta, date
 from .models import DailyProgress, StudySession
 from .forms import DailyProgressForm
 from accounts.leetcode import fetch_leetcode_stats
 from django.db.models import Sum
-
+from datetime import date, timedelta
+from .models import DailyProgress
+from accounts.models import FriendRequest
 
 @login_required
 def add_progress(request):
@@ -145,3 +148,69 @@ def weekly_stats(request):
         'week_start': week_start,
         'today': today,
     })
+def get_weekly_totals(user):
+    today = date.today()
+    week_start = today - timedelta(days=6)
+
+    week_progress = DailyProgress.objects.filter(
+        user=user,
+        date__range=[week_start, today]
+    )
+
+    total_hours = sum(p.study_hours for p in week_progress)
+    total_problems = sum(p.problems_solved for p in week_progress)
+
+    return total_hours, total_problems
+@login_required
+def friends_progress(request):
+    user = request.user
+
+    # get friend ids
+    sent = FriendRequest.objects.filter(
+        sender=user, is_accepted=True
+    ).values_list('receiver_id', flat=True)
+
+    received = FriendRequest.objects.filter(
+        receiver=user, is_accepted=True
+    ).values_list('sender_id', flat=True)
+
+    friend_ids = list(sent) + list(received)
+
+    friends = User.objects.filter(id__in=friend_ids)
+
+    comparison_data = []
+
+    # current user stats
+    my_hours, my_problems = get_weekly_totals(user)
+    comparison_data.append({
+        'name': "You",
+        'hours': my_hours,
+        'problems': my_problems
+    })
+
+    # friends stats
+    for friend in friends:
+        hours, problems = get_weekly_totals(friend)
+        comparison_data.append({
+            'name': friend.username,
+            'hours': hours,
+            'problems': problems
+        })
+    # sort by study hours (descending)
+    comparison_data = sorted(
+    comparison_data,
+    key=lambda x: x['hours'],
+    reverse=True
+)
+
+    names = [row['name'] for row in comparison_data]
+    hours = [row['hours'] for row in comparison_data]
+    problems = [row['problems'] for row in comparison_data]
+
+    return render(request, 'progress/friends_progress.html', {
+        'comparison_data': comparison_data,
+        'names': names,
+        'hours': hours,
+        'problems': problems,
+    })
+

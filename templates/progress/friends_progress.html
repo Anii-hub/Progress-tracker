@@ -1,0 +1,65 @@
+<h2>🏆 Weekly Leaderboard</h2>
+
+<table border="1">
+  <tr>
+    <th>Rank</th>
+    <th>User</th>
+    <th>Study Hours</th>
+    <th>Problems Solved</th>
+  </tr>
+
+  {% for row in comparison_data %}
+  <tr>
+    <td>{{ forloop.counter }}</td>
+    <td>{{ row.name }}</td>
+    <td>{{ row.hours }}</td>
+    <td>{{ row.problems }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<hr>
+
+<h3>📊 Study Hours Comparison</h3>
+<canvas id="hoursChart"></canvas>
+
+<h3>📊 Problems Solved Comparison</h3>
+<canvas id="problemsChart"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{ names|json_script:"names-data" }}
+{{ hours|json_script:"hours-data" }}
+{{ problems|json_script:"problems-data" }}
+
+<script>
+const names = JSON.parse(document.getElementById('names-data').textContent);
+const hours = JSON.parse(document.getElementById('hours-data').textContent);
+const problems = JSON.parse(document.getElementById('problems-data').textContent);
+
+new Chart(document.getElementById('hoursChart'), {
+  type: 'bar',
+  data: {
+    labels: names,
+    datasets: [{
+      label: 'Study Hours',
+      data: hours,
+      borderWidth: 1
+    }]
+  },
+  options: { responsive: false }
+});
+
+new Chart(document.getElementById('problemsChart'), {
+  type: 'bar',
+  data: {
+    labels: names,
+    datasets: [{
+      label: 'Problems Solved',
+      data: problems,
+      borderWidth: 1
+    }]
+  },
+  options: { responsive: false }
+});
+</script>

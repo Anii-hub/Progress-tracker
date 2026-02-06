@@ -14,10 +14,11 @@ from accounts.views import (
     accept_friend_request,
     friends_list
 )
+from core.views import home
+from progress.views import friends_progress
 
 
-def home(request):
-    return render(request, 'home.html')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,6 +36,7 @@ urlpatterns = [
     path('friends/', friends_list, name='friends_list'),
     path('friend-request/send/<int:user_id>/', send_friend_request, name='send_friend_request'),
     path('friend-request/accept/<int:request_id>/', accept_friend_request, name='accept_friend_request'),
+    path('friends-progress/', friends_progress, name='friends_progress'),
 
 
 ]
