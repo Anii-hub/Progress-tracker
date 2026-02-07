@@ -24,3 +24,33 @@ class StudySession(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.duration_minutes} min"
+class Contest(models.Model):
+    creator = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='created_contests'
+    )
+    opponent = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='opponent_contests'
+    )
+
+    start_date = models.DateField()
+    end_date = models.DateField()
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.creator} vs {self.opponent}"
+class Question(models.Model):
+    DIFFICULTY_CHOICES = [
+        ('Easy', 'Easy'),
+        ('Medium', 'Medium'),
+        ('Hard', 'Hard'),
+    ]
+
+    title = models.CharField(max_length=200)
+    topic = models.CharField(max_length=100)
+    company = models.CharField(max_length=100, blank=True)
+    difficulty = models.CharField(max_length=10, choices=DIFFICULTY_CHOICES)
+    link = models.URLField()
+
+    def __str__(self):
+        return f"{self.title} ({self.difficulty})"

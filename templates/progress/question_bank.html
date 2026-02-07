@@ -1,0 +1,24 @@
+<h2>DSA Question Bank</h2>
+
+<form method="get">
+  Topic: <input type="text" name="topic">
+  Difficulty:
+  <select name="difficulty">
+    <option value="">All</option>
+    <option value="Easy">Easy</option>
+    <option value="Medium">Medium</option>
+    <option value="Hard">Hard</option>
+  </select>
+  <button type="submit">Filter</button>
+</form>
+
+<hr>
+
+{% for q in questions %}
+  <p>
+    <b>{{ q.title }}</b> ({{ q.topic }} | {{ q.difficulty }})
+    <a href="{{ q.link }}" target="_blank">Solve</a>
+  </p>
+{% empty %}
+  <p>No questions found.</p>
+{% endfor %}

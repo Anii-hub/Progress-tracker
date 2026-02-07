@@ -10,6 +10,10 @@ from django.db.models import Sum
 from datetime import date, timedelta
 from .models import DailyProgress
 from accounts.models import FriendRequest
+from .models import Contest
+from .forms import ContestForm
+from datetime import date, timedelta
+from .models import Question
 
 @login_required
 def add_progress(request):
@@ -213,4 +217,62 @@ def friends_progress(request):
         'hours': hours,
         'problems': problems,
     })
+@login_required
+def create_contest(request):
+    if request.method == 'POST':
+        form = ContestForm(request.POST, user=request.user)
+        if form.is_valid():
+            opponent = form.cleaned_data['opponent']
 
+            start = date.today()
+            end = start + timedelta(days=7)
+
+            Contest.objects.create(
+                creator=request.user,
+                opponent=opponent,
+                start_date=start,
+                end_date=end
+            )
+
+            return redirect('home')
+    else:
+        form = ContestForm(user=request.user)
+
+    return render(request, 'progress/create_contest.html', {'form': form})
+
+from .models import Contest
+
+@login_required
+def my_contests(request):
+    today = timezone.now().date()
+
+    contests = Contest.objects.filter(
+        start_date__lte=today,
+        end_date__gte=today
+    ).filter(
+        creator=request.user
+    ) | Contest.objects.filter(
+        opponent=request.user,
+        start_date__lte=today,
+        end_date__gte=today
+    )
+
+    return render(request, 'progress/my_contests.html', {
+        'contests': contests
+    })
+@login_required
+def question_bank(request):
+    topic = request.GET.get('topic')
+    difficulty = request.GET.get('difficulty')
+
+    questions = Question.objects.all()
+
+    if topic:
+        questions = questions.filter(topic__icontains=topic)
+
+    if difficulty:
+        questions = questions.filter(difficulty=difficulty)
+
+    return render(request, 'progress/question_bank.html', {
+        'questions': questions
+    })

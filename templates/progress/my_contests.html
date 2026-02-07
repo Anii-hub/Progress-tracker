@@ -1,0 +1,10 @@
+<h2>Active Contests 🔥</h2>
+
+{% for c in contests %}
+  <p>
+    {{ c.creator.username }} vs {{ c.opponent.username }}
+    (Ends: {{ c.end_date }})
+  </p>
+{% empty %}
+  <p>No active contests.</p>
+{% endfor %}

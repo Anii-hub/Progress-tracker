@@ -3,7 +3,7 @@ from django.urls import path
 from django.shortcuts import render
 from accounts.views import signup
 from django.contrib.auth import views as auth_views
-from progress.views import add_progress
+from progress.views import add_progress, my_contests
 from progress.views import progress_list
 from progress.views import start_session, end_session
 from accounts.views import edit_profile
@@ -16,7 +16,9 @@ from accounts.views import (
 )
 from core.views import home
 from progress.views import friends_progress
-
+from progress.views import create_contest
+from progress.views import my_contests
+from progress.views import question_bank
 
 
 
@@ -37,6 +39,12 @@ urlpatterns = [
     path('friend-request/send/<int:user_id>/', send_friend_request, name='send_friend_request'),
     path('friend-request/accept/<int:request_id>/', accept_friend_request, name='accept_friend_request'),
     path('friends-progress/', friends_progress, name='friends_progress'),
+    path('create-contest/', create_contest, name='create_contest'),
+    path('my-contests/', my_contests, name='my_contests'),
+    path('questions/', question_bank, name='question_bank'),
+
+
+
 
 
 ]
