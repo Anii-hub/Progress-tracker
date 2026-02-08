@@ -54,3 +54,24 @@ class Question(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.difficulty})"
+class Duel(models.Model):
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='duels_created')
+    opponent = models.ForeignKey(User, on_delete=models.CASCADE, related_name='duels_received')
+
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+
+    difficulty = models.CharField(max_length=10)
+
+    creator_start_solved = models.IntegerField(default=0)
+    opponent_start_solved = models.IntegerField(default=0)
+
+    creator_end_solved = models.IntegerField(null=True, blank=True)
+    opponent_end_solved = models.IntegerField(null=True, blank=True)
+
+    winner = models.CharField(max_length=50, null=True, blank=True)
+
+    is_finished = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Duel: {self.creator} vs {self.opponent}"

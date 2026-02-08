@@ -3,7 +3,7 @@ from django.urls import path
 from django.shortcuts import render
 from accounts.views import signup
 from django.contrib.auth import views as auth_views
-from progress.views import add_progress, my_contests
+from progress.views import active_duels, add_progress, my_contests, start_duel
 from progress.views import progress_list
 from progress.views import start_session, end_session
 from accounts.views import edit_profile
@@ -42,6 +42,9 @@ urlpatterns = [
     path('create-contest/', create_contest, name='create_contest'),
     path('my-contests/', my_contests, name='my_contests'),
     path('questions/', question_bank, name='question_bank'),
+    path('start-duel/', start_duel, name='start_duel'),
+    path('active-duels/', active_duels, name='active_duels'),
+
 
 
 

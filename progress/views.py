@@ -14,6 +14,9 @@ from .models import Contest
 from .forms import ContestForm
 from datetime import date, timedelta
 from .models import Question
+from .models import Duel
+from .forms import DuelForm
+
 
 @login_required
 def add_progress(request):
@@ -276,3 +279,87 @@ def question_bank(request):
     return render(request, 'progress/question_bank.html', {
         'questions': questions
     })
+@login_required
+def start_duel(request):
+    if request.method == 'POST':
+        form = DuelForm(request.POST, user=request.user)
+        if form.is_valid():
+            opponent = form.cleaned_data['opponent']
+            duration = int(form.cleaned_data['duration'])
+            difficulty = form.cleaned_data['difficulty']
+
+            start_time = timezone.now()
+            end_time = start_time + timedelta(minutes=duration)
+
+            # fetch leetcode stats safely
+            my_stats = fetch_leetcode_stats(request.user.profile.leetcode_username)
+            opp_stats = fetch_leetcode_stats(opponent.profile.leetcode_username)
+
+            my_total = my_stats["total"] if my_stats else 0
+            opp_total = opp_stats["total"] if opp_stats else 0
+
+            Duel.objects.create(
+                creator=request.user,
+                opponent=opponent,
+                start_time=start_time,
+                end_time=end_time,
+                difficulty=difficulty,
+                creator_start_solved=my_total,
+                opponent_start_solved=opp_total
+            )
+
+            return redirect('active_duels')
+    else:
+        form = DuelForm(user=request.user)
+
+    return render(request, 'progress/start_duel.html', {'form': form})
+
+@login_required
+def active_duels(request):
+    finish_duels()
+
+    now = timezone.now()
+
+    duels = Duel.objects.filter(
+        creator=request.user
+    ) | Duel.objects.filter(
+        opponent=request.user
+    )
+
+    active = duels.filter(is_finished=False)
+    finished = duels.filter(is_finished=True)
+
+    questions = Question.objects.all()[:3]
+
+    return render(request, 'progress/active_duels.html', {
+        'active_duels': active,
+        'finished_duels': finished,
+        'questions': questions
+    })
+
+def finish_duels():
+    now = timezone.now()
+    duels = Duel.objects.filter(is_finished=False, end_time__lte=now)
+
+    for duel in duels:
+        creator_stats = fetch_leetcode_stats(duel.creator.profile.leetcode_username)
+        opponent_stats = fetch_leetcode_stats(duel.opponent.profile.leetcode_username)
+
+        creator_end = creator_stats["total"] if creator_stats else 0
+        opponent_end = opponent_stats["total"] if opponent_stats else 0
+
+        duel.creator_end_solved = creator_end
+        duel.opponent_end_solved = opponent_end
+
+        creator_gain = creator_end - duel.creator_start_solved
+        opponent_gain = opponent_end - duel.opponent_start_solved
+
+        if creator_gain > opponent_gain:
+            duel.winner = duel.creator.username
+        elif opponent_gain > creator_gain:
+            duel.winner = duel.opponent.username
+        else:
+            duel.winner = "Draw"
+
+        duel.is_finished = True
+        duel.save()
