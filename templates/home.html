@@ -108,6 +108,19 @@
     <button>Open Question Bank</button>
   </a>
 </p>
+<hr>
+<h3>🔥 Your Streak</h3>
+
+<p>Current Streak: {{ user.profile.current_streak }} days</p>
+<p>Longest Streak: {{ user.profile.longest_streak }} days</p>
+<hr>
+<h3>🏅 Your Badges</h3>
+
+{% for ub in user.userbadge_set.all %}
+  <p>🏅 {{ ub.badge.name }}</p>
+{% empty %}
+  <p>No badges yet.</p>
+{% endfor %}
 
 
 </body>

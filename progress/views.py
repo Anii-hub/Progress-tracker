@@ -53,6 +53,10 @@ def add_progress(request):
             # update profile for next sync
             profile.last_leetcode_total = today_total
             profile.save()
+            update_streak(request.user)
+            check_badges(request.user)
+
+
 
     if request.method == 'POST':
         form = DailyProgressForm(request.POST, instance=progress)
@@ -100,7 +104,6 @@ def progress_list(request):
     })
 
 
-from django.http import HttpResponse
 @login_required
 def start_session(request):
     StudySession.objects.create(
@@ -363,3 +366,53 @@ def finish_duels():
 
         duel.is_finished = True
         duel.save()
+def update_streak(user):
+    today = date.today()
+    yesterday = today - timedelta(days=1)
+
+    today_progress = DailyProgress.objects.filter(user=user, date=today).exists()
+    yesterday_progress = DailyProgress.objects.filter(user=user, date=yesterday).exists()
+
+    profile = user.profile
+
+    if today_progress:
+        if yesterday_progress:
+            profile.current_streak += 1
+        else:
+            profile.current_streak = 1
+
+        if profile.current_streak > profile.longest_streak:
+            profile.longest_streak = profile.current_streak
+
+        profile.save()
+from .models import Badge, UserBadge, DailyProgress, Duel
+
+
+def check_badges(user):
+
+    def give_badge(badge_name):
+        badge = Badge.objects.get(name=badge_name)
+        if not UserBadge.objects.filter(user=user, badge=badge).exists():
+            UserBadge.objects.create(user=user, badge=badge)
+
+    # First progress badge
+    if DailyProgress.objects.filter(user=user).count() >= 1:
+        give_badge("First Progress")
+
+    # Streak badges
+    if user.profile.current_streak >= 3:
+        give_badge("3 Day Streak")
+
+    if user.profile.current_streak >= 7:
+        give_badge("7 Day Streak")
+
+    # Problems solved badge
+    total_problems = DailyProgress.objects.filter(user=user)\
+        .aggregate(Sum('problems_solved'))['problems_solved__sum'] or 0
+
+    if total_problems >= 10:
+        give_badge("10 Problems")
+
+    # Duel win badge
+    if Duel.objects.filter(winner=user.username).exists():
+        give_badge("First Duel Win")

@@ -7,6 +7,8 @@ class Profile(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     leetcode_username = models.CharField(max_length=50, blank=True, null=True)
     last_leetcode_total = models.IntegerField(default=0)
+    current_streak = models.IntegerField(default=0)
+    longest_streak = models.IntegerField(default=0)
 
 
     def __str__(self):

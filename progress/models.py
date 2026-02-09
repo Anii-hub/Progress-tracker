@@ -75,3 +75,21 @@ class Duel(models.Model):
 
     def __str__(self):
         return f"Duel: {self.creator} vs {self.opponent}"
+
+# ------------------- BADGES -------------------
+
+class Badge(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+
+class UserBadge(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    badge = models.ForeignKey(Badge, on_delete=models.CASCADE)
+    earned_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.badge.name}"
