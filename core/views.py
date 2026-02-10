@@ -29,8 +29,12 @@ def home(request):
         is_accepted=False
     ).values_list('receiver_id', flat=True)
 
+    # ⭐ NEW — total friends count for dashboard cards
+    friends_count = len(friends_ids)
+
     return render(request, 'home.html', {
         'users': all_users,
         'friends_ids': friends_ids,
         'sent_requests': sent_requests,
+        'friends_count': friends_count,   # NEW
     })

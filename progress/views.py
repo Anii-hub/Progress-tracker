@@ -385,34 +385,38 @@ def update_streak(user):
             profile.longest_streak = profile.current_streak
 
         profile.save()
+from django.db.models import Sum
 from .models import Badge, UserBadge, DailyProgress, Duel
-
 
 def check_badges(user):
 
-    def give_badge(badge_name):
-        badge = Badge.objects.get(name=badge_name)
+    def give_badge(badge_name, description):
+        badge, created = Badge.objects.get_or_create(
+            name=badge_name,
+            defaults={"description": description}
+        )
+
         if not UserBadge.objects.filter(user=user, badge=badge).exists():
             UserBadge.objects.create(user=user, badge=badge)
 
     # First progress badge
     if DailyProgress.objects.filter(user=user).count() >= 1:
-        give_badge("First Progress")
+        give_badge("First Progress", "Added first progress entry")
 
     # Streak badges
     if user.profile.current_streak >= 3:
-        give_badge("3 Day Streak")
+        give_badge("3 Day Streak", "Maintained 3 day streak")
 
     if user.profile.current_streak >= 7:
-        give_badge("7 Day Streak")
+        give_badge("7 Day Streak", "Maintained 7 day streak")
 
     # Problems solved badge
     total_problems = DailyProgress.objects.filter(user=user)\
         .aggregate(Sum('problems_solved'))['problems_solved__sum'] or 0
 
     if total_problems >= 10:
-        give_badge("10 Problems")
+        give_badge("10 Problems", "Solved 10 problems")
 
     # Duel win badge
     if Duel.objects.filter(winner=user.username).exists():
-        give_badge("First Duel Win")
+        give_badge("First Duel Win", "Won first duel")
