@@ -4,6 +4,8 @@
 <h2>Welcome, {{ user.username }} 👋</h2>
 
 <!-- STATS CARDS -->
+ <a class="btn" href="{% url 'notifications' %}">Notifications</a>
+
 <div class="grid">
 
   <div class="card">
@@ -20,6 +22,7 @@
       <h3>👥 Friends</h3>
       <h1>{{ friends_count }}</h1>
   </div>
+<a class="btn" href="{% url 'friends_page' %}">Friends</a>
 
 </div>
 <!-- LINKED ACCOUNTS -->

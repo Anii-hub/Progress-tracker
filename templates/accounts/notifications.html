@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>🔔 Notifications</h2>
+
+{% for n in notes %}
+  <p>{{ n.message }}</p>
+{% empty %}
+  <p>No notifications yet.</p>
+{% endfor %}
+
+{% endblock %}

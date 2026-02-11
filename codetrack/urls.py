@@ -12,19 +12,23 @@ from progress.views import weekly_stats
 from accounts.views import (
     send_friend_request,
     accept_friend_request,
-    friends_list
+    friends_page,notifications
 )
 from core.views import home
 from progress.views import friends_progress
 from progress.views import create_contest
 from progress.views import my_contests
 from progress.views import question_bank
-
+from accounts.views import landing
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home, name='home'),
+    
+
+    path('', landing, name='landing'),
+    path('home/', home, name='home'),
+
     path('signup/', signup, name='signup'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
@@ -35,7 +39,7 @@ urlpatterns = [
     path('profile/', edit_profile, name='edit_profile'),
     path('leetcode/', leetcode_stats, name='leetcode_stats'),
     path('weekly/', weekly_stats, name='weekly_stats'),
-    path('friends/', friends_list, name='friends_list'),
+    path('friends/', friends_page, name='friends_page'),
     path('friend-request/send/<int:user_id>/', send_friend_request, name='send_friend_request'),
     path('friend-request/accept/<int:request_id>/', accept_friend_request, name='accept_friend_request'),
     path('friends-progress/', friends_progress, name='friends_progress'),
@@ -44,6 +48,8 @@ urlpatterns = [
     path('questions/', question_bank, name='question_bank'),
     path('start-duel/', start_duel, name='start_duel'),
     path('active-duels/', active_duels, name='active_duels'),
+    path('notifications/', notifications, name='notifications'),
+
 
 
 

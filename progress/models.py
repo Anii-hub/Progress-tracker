@@ -93,3 +93,14 @@ class UserBadge(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.badge.name}"
+class LeetCodeStats(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    date = models.DateField()
+
+    total_solved = models.IntegerField()
+    easy = models.IntegerField()
+    medium = models.IntegerField()
+    hard = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.user.username} - {self.date}"
