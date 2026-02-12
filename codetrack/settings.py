@@ -123,6 +123,7 @@ USE_TZ = True
 
 # Static files
 STATIC_URL = 'static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # Authentication redirects
 LOGIN_URL = 'login'            # if user tries to access protected page

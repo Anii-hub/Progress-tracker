@@ -1,8 +1,15 @@
-<h2>Today's Progress</h2>
-<p>⏱ Today’s Study Time (auto): {{ progress.study_hours }} hours</p>
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card" style="max-width:500px;margin:auto;">
+<h2>Add Today's Progress</h2>
 
 <form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Save</button>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn">Save Progress</button>
 </form>
+
+</div>
+
+{% endblock %}

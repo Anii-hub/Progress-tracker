@@ -1,24 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
 <h2>My Progress</h2>
 
-<p>🔥 Current Streak: {{ streak }} days</p>
-<p>⏱ Today’s Study Time: {{ total_hours }} hours</p>
+<div class="card">
+<table>
+<tr>
+<th>Date</th>
+<th>Study Hours</th>
+<th>Problems</th>
+</tr>
 
-<table border="1">
-  <tr>
-    <th>Date</th>
-    <th>Problems Solved</th>
-    <th>Study Hours</th>
-  </tr>
+{% for p in progress %}
+<tr>
+<td>{{ p.date }}</td>
+<td>{{ p.study_hours }}</td>
+<td>{{ p.problems_solved }}</td>
+</tr>
+{% endfor %}
 
-  {% for entry in progress_entries %}
-  <tr>
-    <td>{{ entry.date }}</td>
-    <td>{{ entry.problems_solved }}</td>
-    <td>{{ entry.study_hours }}</td>
-  </tr>
-  {% empty %}
-  <tr>
-    <td colspan="3">No progress logged yet.</td>
-  </tr>
-  {% endfor %}
 </table>
+</div>
+
+{% endblock %}

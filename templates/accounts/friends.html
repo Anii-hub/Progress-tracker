@@ -1,54 +1,42 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>👥 Friends</h2>
+<h1>Friends</h1>
 
-<!-- SEARCH -->
+<div class="card">
 <form method="get">
-  <input type="text" name="q" placeholder="Search users...">
-  <button type="submit">Search</button>
+<input name="q" placeholder="Search users...">
+<button class="btn">Search</button>
 </form>
+</div>
 
-<hr>
+<div class="grid">
 
+<div class="card">
 <h3>Your Friends</h3>
 {% for f in friends %}
-  <p>{{ f.username }}</p>
+<p>{{ f.username }}</p>
 {% empty %}
-  <p>No friends yet.</p>
+<p>No friends yet.</p>
 {% endfor %}
+</div>
 
-<hr>
-
-<h3>Pending Requests</h3>
-{% for req in received_requests %}
-  <p>
-    {{ req.sender.username }}
-    <a href="{% url 'accept_friend_request' req.id %}">
-      <button>Accept</button>
-    </a>
-  </p>
-{% empty %}
-  <p>No requests.</p>
-{% endfor %}
-
-<hr>
-
+<div class="card">
 <h3>Find Users</h3>
 {% for u in users %}
-  <p>
-    {{ u.username }}
-
-    {% if u.id in friends_ids %}
-        ✔ Friends
-    {% elif u.id in sent_requests %}
-        ⏳ Request Sent
-    {% else %}
-        <a href="{% url 'send_friend_request' u.id %}">
-            <button>Add Friend</button>
-        </a>
-    {% endif %}
-  </p>
+<p>
+{{ u.username }}
+{% if u.id in friends_ids %}
+✔ Friends
+{% elif u.id in sent_requests %}
+⏳ Sent
+{% else %}
+<a class="btn" href="{% url 'send_friend_request' u.id %}">Add</a>
+{% endif %}
+</p>
 {% endfor %}
+</div>
+
+</div>
 
 {% endblock %}

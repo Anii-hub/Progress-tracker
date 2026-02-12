@@ -1,85 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2>Welcome, {{ user.username }} 👋</h2>
-
-<!-- STATS CARDS -->
- <a class="btn" href="{% url 'notifications' %}">Notifications</a>
+<h1>Dashboard</h1>
 
 <div class="grid">
 
-  <div class="card">
-      <h3>🔥 Current Streak</h3>
-      <h1>{{ user.profile.current_streak }} days</h1>
-  </div>
-
-  <div class="card">
-      <h3>🏆 Longest Streak</h3>
-      <h1>{{ user.profile.longest_streak }} days</h1>
-  </div>
-
-  <div class="card">
-      <h3>👥 Friends</h3>
-      <h1>{{ friends_count }}</h1>
-  </div>
-<a class="btn" href="{% url 'friends_page' %}">Friends</a>
-
-</div>
-<!-- LINKED ACCOUNTS -->
 <div class="card">
-  <h3>🔗 Linked Accounts</h3>
-
-  {% if user.profile.leetcode_username %}
-      <p>🟢 LeetCode Connected: {{ user.profile.leetcode_username }}</p>
-  {% else %}
-      <p>🔴 LeetCode not connected</p>
-  {% endif %}
-
-  <a class="btn" href="{% url 'edit_profile' %}">Edit Profile</a>
+<h3>⏱ Study Session</h3>
+<a class="btn" href="{% url 'start_session' %}">Start Session</a>
+<a class="btn btn-secondary" href="{% url 'end_session' %}">End Session</a>
 </div>
 
-<!-- SESSION CONTROLS -->
 <div class="card">
-  <h3>⏱ Study Session</h3>
-
-  <a class="btn" href="{% url 'start_session' %}">▶ Start Session</a>
-  <a class="btn" href="{% url 'end_session' %}">⏹ End Session</a>
+<h3>📊 Progress</h3>
+<a class="btn" href="{% url 'add_progress' %}">Add Progress</a>
+<a class="btn btn-secondary" href="{% url 'progress_list' %}">View Progress</a>
 </div>
 
-<!-- PROGRESS ACTIONS -->
 <div class="card">
-  <h3>📊 Progress</h3>
-
-  <a class="btn" href="{% url 'add_progress' %}">Add Today’s Progress</a>
-  <a class="btn" href="{% url 'progress_list' %}">View My Progress</a>
+<h3>👥 Friends</h3>
+<p>Total Friends: {{ friends_count }}</p>
+<a class="btn" href="{% url 'friends_page' %}">Open Friends</a>
 </div>
 
-<!-- COMPETITION -->
 <div class="card">
-  <h3>⚔ Competition</h3>
-
-  <a class="btn" href="{% url 'start_duel' %}">Start Duel</a>
-  <a class="btn" href="{% url 'active_duels' %}">Active Duels</a>
-  <a class="btn" href="{% url 'create_contest' %}">Start Contest</a>
+<h3>🔔 Notifications</h3>
+<a class="btn" href="{% url 'notifications' %}">View Notifications</a>
 </div>
 
-<!-- PRACTICE -->
-<div class="card">
-  <h3>📚 Practice</h3>
-
-  <a class="btn" href="{% url 'question_bank' %}">Question Bank</a>
-</div>
-
-
-<!-- BADGES -->
-<div class="card">
-  <h3>🏅 Your Badges</h3>
-
-  {% for ub in user.userbadge_set.all %}
-    <p>🏅 {{ ub.badge.name }}</p>
-  {% empty %}
-    <p>No badges yet.</p>
-  {% endfor %}
 </div>
 
 {% endblock %}

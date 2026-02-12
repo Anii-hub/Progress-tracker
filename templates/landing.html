@@ -1,46 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CodeTrack</title>
-
-    <style>
-        body {
-            font-family: Arial;
-            background: #111827;
-            color: white;
-            text-align: center;
-            padding-top: 100px;
-        }
-
-        .btn {
-            padding: 12px 20px;
-            background: #2563eb;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin: 10px;
-            display: inline-block;
-        }
-
-        .features {
-            margin-top: 50px;
-        }
-    </style>
+<title>CodeTrack</title>
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body>
 
-<h1>🚀 CodeTrack</h1>
-<p>Track coding progress. Compete with friends. Stay consistent.</p>
+<body style="background:#111827;color:white;text-align:center;padding-top:120px;">
 
-<a class="btn" href="{% url 'signup' %}">Get Started</a>
-<a class="btn" href="{% url 'login' %}">Login</a>
+<h1 style="font-size:48px;">🚀 CodeTrack</h1>
+<p style="font-size:20px;">Track coding. Compete with friends. Stay consistent.</p>
 
-<div class="features">
-    <h2>Features</h2>
-    <p>📊 Track daily coding progress</p>
-    <p>⚔ Compete in coding duels</p>
-    <p>🏆 Weekly contests with friends</p>
-    <p>🔥 Streaks and badges</p>
+<!-- Option 2: Use anchor tags (best practice) -->
+<a href="{% url 'signup' %}" class="btn">Get Started</a>
+<a href="{% url 'login' %}" class="btn btn-secondary">Login</a>
+<div style="margin-top:80px;">
+<h2>Features</h2>
+<p>📊 Track daily coding progress</p>
+<p>⚔ Compete in coding duels</p>
+<p>🏆 Weekly contests</p>
+<p>🔥 Streaks & badges</p>
 </div>
 
 </body>
