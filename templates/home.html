@@ -5,24 +5,55 @@
 
 <div class="grid">
 
+<!-- STUDY SESSION -->
 <div class="card">
 <h3>⏱ Study Session</h3>
 <a class="btn" href="{% url 'start_session' %}">Start Session</a>
 <a class="btn btn-secondary" href="{% url 'end_session' %}">End Session</a>
 </div>
 
+<!-- PROGRESS -->
 <div class="card">
 <h3>📊 Progress</h3>
 <a class="btn" href="{% url 'add_progress' %}">Add Progress</a>
 <a class="btn btn-secondary" href="{% url 'progress_list' %}">View Progress</a>
+<a class="btn" href="{% url 'weekly_stats' %}">Weekly Stats</a>
 </div>
 
+<!-- FRIENDS -->
 <div class="card">
 <h3>👥 Friends</h3>
 <p>Total Friends: {{ friends_count }}</p>
 <a class="btn" href="{% url 'friends_page' %}">Open Friends</a>
 </div>
 
+<!-- BADGES -->
+<div class="card">
+<h3>🏅 Achievements</h3>
+<a class="btn" href="{% url 'badges' %}">View Badges</a>
+</div>
+
+<!-- DUELS -->
+<div class="card">
+<h3>⚔ Coding Duels</h3>
+<a class="btn" href="{% url 'start_duel' %}">Start Duel</a>
+<a class="btn btn-secondary" href="{% url 'active_duels' %}">Active Duels</a>
+</div>
+
+<!-- CONTESTS -->
+<div class="card">
+<h3>🏆 Contests</h3>
+<a class="btn" href="{% url 'create_contest' %}">Create Contest</a>
+<a class="btn btn-secondary" href="{% url 'my_contests' %}">View Contests</a>
+</div>
+
+<!-- QUESTION BANK -->
+<div class="card">
+<h3>📚 Practice</h3>
+<a class="btn" href="{% url 'question_bank' %}">Question Bank</a>
+</div>
+
+<!-- NOTIFICATIONS -->
 <div class="card">
 <h3>🔔 Notifications</h3>
 <a class="btn" href="{% url 'notifications' %}">View Notifications</a>

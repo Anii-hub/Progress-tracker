@@ -1,9 +1,11 @@
 from django.contrib import admin
 from django.urls import path
 from django.shortcuts import render
+from accounts import views
 from accounts.views import signup
 from django.contrib.auth import views as auth_views
-from progress.views import active_duels, add_progress, my_contests, start_duel
+from progress.views import active_duels, add_progress, start_duel, contest_list
+
 from progress.views import progress_list
 from progress.views import start_session, end_session
 from accounts.views import edit_profile
@@ -20,7 +22,7 @@ from progress.views import create_contest
 from progress.views import my_contests
 from progress.views import question_bank
 from accounts.views import landing
-
+from progress.views import badges 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,6 +30,7 @@ urlpatterns = [
 
     path('', landing, name='landing'),
     path('home/', home, name='home'),
+    path("badges/", badges, name="badges"),
 
     path('signup/', signup, name='signup'),
     path('login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
@@ -44,7 +47,9 @@ urlpatterns = [
     path('friend-request/accept/<int:request_id>/', accept_friend_request, name='accept_friend_request'),
     path('friends-progress/', friends_progress, name='friends_progress'),
     path('create-contest/', create_contest, name='create_contest'),
-    path('my-contests/', my_contests, name='my_contests'),
+    path("contests/", contest_list, name="contest_list"),
+    path("my-contests/", my_contests, name="my_contests"),
+
     path('questions/', question_bank, name='question_bank'),
     path('start-duel/', start_duel, name='start_duel'),
     path('active-duels/', active_duels, name='active_duels'),

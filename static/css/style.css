@@ -100,3 +100,11 @@ button:hover {
 .btn-secondary:hover {
     opacity: 0.9;
 }
+select {
+    padding: 10px;
+    width: 100%;
+    margin-top: 8px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}

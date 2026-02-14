@@ -1,24 +1,31 @@
-<h2>DSA Question Bank</h2>
+{% extends "base.html" %}
+{% block content %}
 
+<h1>📚 Question Bank</h1>
+
+<div class="card">
 <form method="get">
-  Topic: <input type="text" name="topic">
-  Difficulty:
-  <select name="difficulty">
-    <option value="">All</option>
-    <option value="Easy">Easy</option>
-    <option value="Medium">Medium</option>
-    <option value="Hard">Hard</option>
-  </select>
-  <button type="submit">Filter</button>
+    <input name="topic" placeholder="Topic">
+    <input name="difficulty" placeholder="Difficulty">
+    <button class="btn">Filter</button>
 </form>
+</div>
 
-<hr>
+<div class="grid">
 
 {% for q in questions %}
-  <p>
-    <b>{{ q.title }}</b> ({{ q.topic }} | {{ q.difficulty }})
-    <a href="{{ q.link }}" target="_blank">Solve</a>
-  </p>
+<div class="card">
+    <h3>{{ q.title }}</h3>
+    <p>Topic: {{ q.topic }}</p>
+    <p>Difficulty: {{ q.difficulty }}</p>
+    <a class="btn" href="{{ q.link }}" target="_blank">Solve</a>
+</div>
 {% empty %}
-  <p>No questions found.</p>
+<div class="card">
+    <p>No questions found.</p>
+</div>
 {% endfor %}
+
+</div>
+
+{% endblock %}

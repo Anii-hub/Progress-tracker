@@ -1,31 +1,22 @@
-<h2>⚔ Active Duels</h2>
+{% extends "base.html" %}
+{% block content %}
 
-{% for duel in active_duels %}
-  <p>{{ duel.creator }} vs {{ duel.opponent }} (Ends: {{ duel.end_time }})</p>
+<h1>⚔ Active Duels</h1>
+
+<div class="grid">
+
+{% for duel in duels %}
+<div class="card">
+    <h3>{{ duel.creator.username }} vs {{ duel.opponent.username }}</h3>
+    <p>Ends at: {{ duel.end_time }}</p>
+    <p>Status: {{ duel.status }}</p>
+</div>
 {% empty %}
-  <p>No active duels.</p>
+<div class="card">
+    <p>No active duels.</p>
+</div>
 {% endfor %}
 
-<hr>
+</div>
 
-<h3>Duel Questions</h3>
-{% for q in questions %}
-  <p><a href="{{ q.link }}" target="_blank">{{ q.title }}</a></p>
-{% endfor %}
-
-<hr>
-
-<h2>🏁 Finished Duels</h2>
-
-{% for duel in finished_duels %}
-  <p>
-    {{ duel.creator }} vs {{ duel.opponent }} →
-    {% if duel.winner == "Draw" %}
-      🤝 It's a Draw!
-    {% else %}
-      🏆 Winner: {{ duel.winner }}
-    {% endif %}
-  </p>
-{% empty %}
-  <p>No finished duels yet.</p>
-{% endfor %}
+{% endblock %}

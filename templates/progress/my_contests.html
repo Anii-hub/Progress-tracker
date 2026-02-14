@@ -1,10 +1,22 @@
-<h2>Active Contests 🔥</h2>
+{% extends "base.html" %}
+{% block content %}
 
-{% for c in contests %}
-  <p>
-    {{ c.creator.username }} vs {{ c.opponent.username }}
-    (Ends: {{ c.end_date }})
-  </p>
+<h1>🏆 Contests</h1>
+
+<div class="grid">
+
+{% for contest in contests %}
+<div class="card">
+    <h3>{{ contest.name }}</h3>
+    <p>Starts: {{ contest.start_time }}</p>
+    <p>Duration: {{ contest.duration_minutes }} minutes</p>
+</div>
 {% empty %}
-  <p>No active contests.</p>
+<div class="card">
+    <p>No contests yet.</p>
+</div>
 {% endfor %}
+
+</div>
+
+{% endblock %}

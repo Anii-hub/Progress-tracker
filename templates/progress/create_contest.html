@@ -1,7 +1,24 @@
-<h2>Challenge a Friend 🔥</h2>
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card" style="max-width:650px;margin:60px auto;">
+<h2 style="text-align:center;">🏆 Create Contest</h2>
 
 <form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Start Contest</button>
+    {% csrf_token %}
+
+    <label>Contest Name</label>
+{{ form.name }}
+
+<label>Start Time</label>
+{{ form.start_time }}
+
+<label>Duration</label>
+{{ form.duration_minutes }}
+
+    <button style="width:100%;margin-top:15px;">Create Contest</button>
 </form>
+
+</div>
+
+{% endblock %}

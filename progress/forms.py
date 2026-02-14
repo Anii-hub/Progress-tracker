@@ -1,58 +1,73 @@
 from django import forms
 from .models import DailyProgress
-
+from .models import Duel,Contest
 class DailyProgressForm(forms.ModelForm):
     class Meta:
         model = DailyProgress
         fields = ['problems_solved']
 
+from django import forms
 from django.contrib.auth.models import User
 
-class ContestForm(forms.Form):
-    opponent = forms.ModelChoiceField(queryset=User.objects.none())
 
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user')
+# =========================
+# DUEL FORM (CUSTOM FORM)
+# =========================
+class DuelForm(forms.Form):
+    opponent = forms.ModelChoiceField(
+        queryset=User.objects.none(),
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
+    duration = forms.IntegerField(
+        label="Duration (minutes)",
+        widget=forms.NumberInput(attrs={
+            "class": "form-control",
+            "placeholder": "30"
+        })
+    )
+
+    def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # show only friends as opponents
+        # show only friends in dropdown
         from accounts.models import FriendRequest
 
         sent = FriendRequest.objects.filter(
             sender=user, is_accepted=True
-        ).values_list('receiver_id', flat=True)
+        ).values_list("receiver_id", flat=True)
 
         received = FriendRequest.objects.filter(
             receiver=user, is_accepted=True
-        ).values_list('sender_id', flat=True)
+        ).values_list("sender_id", flat=True)
 
         friend_ids = list(sent) + list(received)
 
-        self.fields['opponent'].queryset = User.objects.filter(id__in=friend_ids)
+        self.fields["opponent"].queryset = User.objects.filter(id__in=friend_ids)
 
-class DuelForm(forms.Form):
-    opponent = forms.ModelChoiceField(queryset=User.objects.none())
-    duration = forms.ChoiceField(choices=[
-        (30, '30 minutes'),
-        (45, '45 minutes'),
-        (60, '60 minutes'),
-    ])
-    difficulty = forms.ChoiceField(choices=[
-        ('Easy', 'Easy'),
-        ('Medium', 'Medium'),
-        ('Hard', 'Hard'),
-    ])
 
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user')
-        super().__init__(*args, **kwargs)
+# =========================
+# CONTEST FORM (CUSTOM FORM)
+# =========================
+class ContestForm(forms.Form):
+    title = forms.CharField(
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "placeholder": "Weekly DSA Contest"
+        })
+    )
 
-        from accounts.models import FriendRequest
+    start_time = forms.DateTimeField(
+        widget=forms.DateTimeInput(attrs={
+            "type": "datetime-local",
+            "class": "form-control"
+        })
+    )
 
-        sent = FriendRequest.objects.filter(sender=user, is_accepted=True)\
-            .values_list('receiver_id', flat=True)
-        received = FriendRequest.objects.filter(receiver=user, is_accepted=True)\
-            .values_list('sender_id', flat=True)
-
-        friend_ids = list(sent) + list(received)
-        self.fields['opponent'].queryset = User.objects.filter(id__in=friend_ids)
+    duration = forms.IntegerField(
+        label="Duration (minutes)",
+        widget=forms.NumberInput(attrs={
+            "class": "form-control",
+            "placeholder": "60"
+        })
+    )

@@ -1,7 +1,23 @@
-<h2>Edit Profile</h2>
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card" style="max-width:500px;margin:60px auto;">
+
+<h2 style="text-align:center;">⚙ Edit Profile</h2>
 
 <form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Save</button>
+    {% csrf_token %}
+
+    <label>LeetCode Username</label>
+    <input 
+        type="text" 
+        name="leetcode_username" 
+        value="{{ form.leetcode_username.value|default:'' }}"
+        placeholder="Enter your LeetCode username">
+
+    <button style="width:100%;margin-top:10px;">Save Changes</button>
 </form>
+
+</div>
+
+{% endblock %}

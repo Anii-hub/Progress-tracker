@@ -3,19 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.contrib.auth.models import User
 from datetime import timedelta, date
-from .models import DailyProgress, StudySession
-from .forms import DailyProgressForm
-from accounts.leetcode import fetch_leetcode_stats
 from django.db.models import Sum
-from datetime import date, timedelta
-from .models import DailyProgress
 from accounts.models import FriendRequest
-from .models import Contest
-from .forms import ContestForm
-from datetime import date, timedelta
-from .models import Question
-from .models import Duel
-from .forms import DuelForm
+from accounts.leetcode import fetch_leetcode_stats
+from .models import DailyProgress, StudySession, Contest, Question, Duel, Badge, UserBadge
+from .forms import DailyProgressForm, ContestForm, DuelForm
 
 
 @login_required
@@ -208,10 +200,10 @@ def friends_progress(request):
         })
     # sort by study hours (descending)
     comparison_data = sorted(
-    comparison_data,
-    key=lambda x: x['hours'],
-    reverse=True
-)
+        comparison_data,
+        key=lambda x: x['hours'],
+        reverse=True
+    )
 
     names = [row['name'] for row in comparison_data]
     hours = [row['hours'] for row in comparison_data]
@@ -223,6 +215,8 @@ def friends_progress(request):
         'hours': hours,
         'problems': problems,
     })
+
+
 @login_required
 def create_contest(request):
     if request.method == 'POST':
@@ -246,8 +240,6 @@ def create_contest(request):
 
     return render(request, 'progress/create_contest.html', {'form': form})
 
-from .models import Contest
-
 @login_required
 def my_contests(request):
     today = timezone.now().date()
@@ -266,6 +258,22 @@ def my_contests(request):
     return render(request, 'progress/my_contests.html', {
         'contests': contests
     })
+
+
+@login_required
+def contest_list(request):
+    today = timezone.now().date()
+    
+    contests = Contest.objects.filter(
+        start_date__lte=today,
+        end_date__gte=today
+    )
+    
+    return render(request, 'progress/my_contests.html', {
+        'contests': contests
+    })
+
+
 @login_required
 def question_bank(request):
     topic = request.GET.get('topic')
@@ -282,6 +290,8 @@ def question_bank(request):
     return render(request, 'progress/question_bank.html', {
         'questions': questions
     })
+
+
 @login_required
 def start_duel(request):
     if request.method == 'POST':
@@ -366,6 +376,8 @@ def finish_duels():
 
         duel.is_finished = True
         duel.save()
+
+
 def update_streak(user):
     today = date.today()
     yesterday = today - timedelta(days=1)
@@ -385,8 +397,7 @@ def update_streak(user):
             profile.longest_streak = profile.current_streak
 
         profile.save()
-from django.db.models import Sum
-from .models import Badge, UserBadge, DailyProgress, Duel
+
 
 def check_badges(user):
 
@@ -420,3 +431,14 @@ def check_badges(user):
     # Duel win badge
     if Duel.objects.filter(winner=user.username).exists():
         give_badge("First Duel Win", "Won first duel")
+
+
+@login_required
+def badges(request):
+    user_badges = UserBadge.objects.filter(user=request.user)\
+                                   .select_related("badge")\
+                                   .order_by("-earned_at")
+
+    return render(request, "progress/badges.html", {
+        "badges": user_badges
+    })

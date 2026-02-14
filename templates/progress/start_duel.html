@@ -1,6 +1,22 @@
-<h2>Start Timed Duel ⚔</h2>
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card" style="max-width:600px;margin:60px auto;">
+<h2 style="text-align:center;">⚔ Start Coding Duel</h2>
+
 <form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Start Duel</button>
+    {% csrf_token %}
+
+   <label>Choose Opponent</label>
+{{ form.opponent }}
+
+<label>Duel Duration (minutes)</label>
+{{ form.duration_minutes }}
+
+
+    <button style="width:100%;margin-top:15px;">Start Duel</button>
 </form>
+
+</div>
+
+{% endblock %}
